@@ -6,7 +6,7 @@ import RelativedProducts from '../components/RelativedProducts';
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency } = useContext(ShopContext);
+  const { products, currency, addToCart } = useContext(ShopContext);
   const [productData, setProductData] = useState(null);
   const [image, setImage] = useState(null);
   const [size, setSize] = useState(null);
@@ -15,7 +15,6 @@ const Product = () => {
     const product = products.find((product) => product._id === productId);
     setProductData(product);
     setImage(product?.image[0]);
-    console.log(productData);
   };
 
   useEffect(() => {
@@ -67,7 +66,7 @@ const Product = () => {
               }
             </div>
           </div>
-          <button className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
+          <button onClick={() => addToCart(productData._id, size)} className='bg-black text-white px-8 py-3 text-sm active:bg-gray-700'>ADD TO CART</button>
           <hr className='mt-8 sm:w-4/5' />
           <p>100% original product.</p>
           <p>Cash on delivery is available on this product.</p>
