@@ -82,6 +82,15 @@ const registerUser = async (req, res) => {
 
 const adminLogin = async (req, res) => {
   const { email, password } = req.body;
+
+  if (email !== process.env.ADMIN_EMAIL || password !== process.env.ADMIN_PASSWORD) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: "Invalid credentials" });
+  };
+
+  const token = createToken({ email, password, isAdmin: true });
+
+  res.status(StatusCodes.OK).json({ success: true, token });
+
 };
 
 const createToken = (id) => {

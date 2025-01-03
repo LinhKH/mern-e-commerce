@@ -7,11 +7,12 @@ import {
   getProduct,
   getProducts,
 } from "../controllers/product.controller.js";
+import adminAuth from "../middleware/adminAuth.js";
 
 const router = express.Router();
 
 router.post(
-  "/add",
+  "/add", adminAuth,
   upload.fields([
     { name: "image1", maxCount: 1 },
     { name: "image2", maxCount: 1 },
