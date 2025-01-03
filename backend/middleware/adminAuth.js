@@ -7,6 +7,7 @@ const adminAuth = (req, res, next) => {
     return res.status(401).json({ success: false, message: "No token, authorization denied" });
   }
 
+  console.log(jwt.verify(token, process.env.JWT_SECRET));
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (!decoded.id.isAdmin) {

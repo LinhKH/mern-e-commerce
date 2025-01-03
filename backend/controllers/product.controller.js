@@ -42,7 +42,7 @@ const createProduct = async (req, res) => {
       image: imageUrl,
       category,
       subCategory,
-      sizes,
+      sizes: JSON.parse(sizes),
       bestseller,
     });
 
