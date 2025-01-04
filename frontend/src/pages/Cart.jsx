@@ -9,22 +9,45 @@ const Cart = () => {
   const { products, currency, cartItems, updateCartQuantity, navigate } = useContext(ShopContext);
   const [cartData, setCartData] = useState([]);
 
-  useEffect(() => {
+  // useEffect(() => {
+  //   if (products.length > 0) {
+  //     let tempCartData = [];
+  //     for (const item in cartItems) {
+  //       const product = products.find((product) => product._id === item);
+  //       const sizes = cartItems[item];
+  //       for (const size in sizes) {
+  //         tempCartData.push({
+  //           ...product,
+  //           size,
+  //           quantity: sizes[size],
+  //         });
+  //       }
+  //     }
+  //     setCartData(tempCartData);
+
+  //   }
+  // }, [cartItems, products]);
+  const fetchCartData = () => {
     let tempCartData = [];
-    for (const item in cartItems) {
-      const product = products.find((product) => product._id === item);
-      const sizes = cartItems[item];
-      for (const size in sizes) {
-        tempCartData.push({
-          ...product,
-          size,
-          quantity: sizes[size],
-        });
+    if (products.length > 0) {
+      for (const item in cartItems) {
+        const product = products.find((product) => product._id === item);
+        const sizes = cartItems[item];
+        for (const size in sizes) {
+          tempCartData.push({
+            ...product,
+            size,
+            quantity: sizes[size],
+          });
+        }
       }
     }
     setCartData(tempCartData);
-    console.log(tempCartData)
-  }, [cartItems]);
+  };
+
+  useEffect(() => {
+    fetchCartData();
+  }, [products, cartItems]);
 
   return (
     <div className='border-t pt-14'>
@@ -33,7 +56,7 @@ const Cart = () => {
       </div>
       <div>
         {cartData.map((item, index) => (
-          <div key={index} className="py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] items-center gap-4">
+          <div key={index} className="py-4 border-t border-b text-gray-700 grid grid-cols-[4fr_0.5fr_0.5fr] sm:grid-cols-[4fr_2fr_0.5fr] justify-center items-center gap-4">
             <div className="flex items-start gap-6">
               <img src={item.image[0]} alt="" className="w-16 sm:w-20 h-auto" />
               <div>
