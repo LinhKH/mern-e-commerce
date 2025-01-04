@@ -81,12 +81,31 @@ const getProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.id);
-    res.status(StatusCodes.OK).json({ success: true, message: "Product deleted" });
+    // delete images from cloudinary
+    // await Promise.all(
+    //   product.image.map(async (image) => {
+    //     const public_id = image.split("/").slice(-1)[0].split(".")[0];
+    //     await cloudinary.uploader.destroy(`mern-ecommerce/${public_id}`);
+    //   })
+    // );
+    await deleteProductImages(product.image);
+    res.status(StatusCodes.OK).json({ success: true, message: "Product & Related Images deleted" });
   } catch (error) {
     res
       .status(StatusCodes.BAD_REQUEST)
       .json({ success: false, message: error.message });
   }
 };
+
+const deleteProductImages = async (images) => {
+  let arrImages = [];
+  const deleteImagePromises = images.map((image) => {
+    const [public_id] = image.split("/").slice(-1)[0].split(".");
+    arrImages.push(`mern-ecommerce/${public_id}`);
+  });
+  cloudinary.uploader.destroy(arrImages);
+  await Promise.all(deleteImagePromises);
+};
+
 
 export { createProduct, getProducts, getProduct, deleteProduct };
