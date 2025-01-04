@@ -1,13 +1,15 @@
 import { createContext, useEffect, useState } from "react";
-import { products } from "../assets/assets.js"
+// import { products } from "../assets/assets.js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const ShopContext = createContext();
 
 const ShopContextProvider = ({ children }) => {
   const currency = "$";
   const delivery_fee = 10;
+  const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
@@ -63,14 +65,28 @@ const ShopContextProvider = ({ children }) => {
     return amount;
   };
 
+  const getAllProducts = async () => {
+    try {
+      const { data : { success, products}} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/products/list`);
+      if (!success) {
+        toast.error('Failed to fetch products');
+        return;
+      }
+      console.log(products);
+      setProducts(products);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const value = {
     products, currency, delivery_fee, search, setSearch, showSearch, setShowSearch, cartItems, addToCart, getCartCount, updateCartQuantity,
     getCartAmount, navigate
   };
 
   useEffect(() => {
-    console.log(cartItems)
-  }, [cartItems]);
+    getAllProducts();
+  }, []);
 
   return (
     <ShopContext.Provider value={value}>

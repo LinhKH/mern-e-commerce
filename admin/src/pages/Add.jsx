@@ -5,21 +5,23 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Add = ({ token }) => {
+  const [loading, setLoading] = useState(false);
   const [image1, setImage1] = useState(false);
   const [image2, setImage2] = useState(false);
   const [image3, setImage3] = useState(false);
   const [image4, setImage4] = useState(false);
 
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [subCategory, setSubCategory] = useState("");
-  const [price, setPrice] = useState(0);
+  const [description, setDescription] = useState("A lightweight, usually knitted, pullover shirt, close-fitting and with a round neckline and short sleeves, worn as an undershirt or outer garment.");
+  const [category, setCategory] = useState("Men");
+  const [subCategory, setSubCategory] = useState("Topwear");
+  const [price, setPrice] = useState('');
   const [sizes, setSizes] = useState([]);
-  const [bestseller, setBestseller] = useState(false);
+  const [bestseller, setBestseller] = useState(true);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const formData = new FormData();
     image1 && formData.append("image1", image1);
@@ -55,6 +57,8 @@ const Add = ({ token }) => {
           setSizes([]);
           setBestseller(false);
           toast.success(response.data.message);
+          setLoading(false);
+          window.location.reload();
         } else {
           toast.error(response.data.message);
         }
@@ -283,6 +287,7 @@ const Add = ({ token }) => {
       <div className="flex gap-2 items-center mt-2">
         <input
           onChange={() => setBestseller((prev) => !prev)}
+          checked={bestseller}
           type="checkbox"
           id="bestseller"
         />
@@ -290,7 +295,7 @@ const Add = ({ token }) => {
           Is Bestseller
         </label>
       </div>
-      <button className="bg-black text-white w-28 py-3 mt-4">ADD</button>
+      <button className="bg-black text-white w-28 py-3 mt-4" disabled={loading}>{loading ? 'Adding...' : 'ADD'}</button>
     </form>
   );
 };

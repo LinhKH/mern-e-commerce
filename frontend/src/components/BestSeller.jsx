@@ -12,7 +12,7 @@ const BestSeller = () => {
       (product) => product.bestseller === true
     );
     setBestseller(bestseller.slice(0, 5));
-  }, []);
+  }, [products]);
 
   return (
     <div className="my-10">
