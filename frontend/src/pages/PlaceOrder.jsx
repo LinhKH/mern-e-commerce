@@ -5,6 +5,7 @@ import { assets } from '../assets/assets';
 import { ShopContext } from '../context/ShopContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { replace } from 'react-router-dom';
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState('cod');
@@ -68,7 +69,21 @@ const PlaceOrder = () => {
         }
         break;
       case 'stripe':
-        console.log('Stripe');
+        try {
+          const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/orders/place-stripe`, orderData, { headers: { token: token } });
+
+          if (response.data.success) {
+            setCartItems({});
+            const { session_url } = response.data;
+            window.location.replace(session_url);
+          } else {
+            console.log(response.data.message);
+          }
+          
+        } catch (error) {
+          console.log(error);
+          toast.error(error.message);
+        }
         break;
       default:
         console.log('Default');

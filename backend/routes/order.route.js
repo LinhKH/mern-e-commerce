@@ -7,6 +7,7 @@ import {
   updateOrderStatus,
   getMyOrders,
   getAdminOrders,
+  verifyOrder
 } from "../controllers/order.controller.js";
 
 import adminAuth from "../middleware/adminAuth.js";
@@ -19,5 +20,6 @@ router.route("/place-stripe").post(authUser, placeOrderStripe);
 router.route("/my-orders").get(authUser, getMyOrders);
 router.route("/:id").get(authUser, getOrderById);
 router.route("/:id/status").put(adminAuth, updateOrderStatus);
+router.route('/verify').post(authUser, verifyOrder);
 
 export default router;
